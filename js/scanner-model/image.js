@@ -27,13 +27,6 @@ angular.module("scannerModel").factory("ScanImage", function(Status) {
 
 		this.deskewCanvas = null;
 		this.deskewStatus = Status.INITIAL;
-
-		this.corners = {
-			tlx: 0, tly: 0,
-			trx: this.canvas.width, try: 0,
-			blx: 0, bly: this.canvas.height,
-			brx: this.canvas.width, bry: this.canvas.height
-		};
 		this.cornersStatus = Status.INITIAL;
 
 	}
@@ -63,6 +56,13 @@ angular.module("scannerModel").factory("ScanImage", function(Status) {
 		this.canvas.width = this.imgElem.width;
 		var ctx = this.canvas.getContext('2d');
 		ctx.drawImage(this.imgElem, 0, 0);
+		
+		this.corners = {
+			tlx: 0, tly: 0,
+			trx: this.getWidth(), try: 0,
+			blx: 0, bly: this.getHeight(),
+			brx: this.getWidth(), bry: this.getHeight()
+		};
 
 		this.imageLoadStatus = Status.SUCCESS;
 

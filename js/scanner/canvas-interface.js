@@ -7,44 +7,107 @@ angular.module("scannerApp").factory("CanvasInterface", function() {
 	
 	CanvasInterface.prototype.loadImage = function(img) {
 		this.scanImg = img;
-		this.dispCorners = [[0, 0], [0, 0], [0, 0], [0, 0]]; //(x,y): tl, tr, bl, br
+		this.dispCorners = [[0, 0], [0, 0], [0, 0], [0, 0]]; //(x,y): tl, tr, br, bl
 		var dispAR = this.scanImg.getHeight() / this.scanImg.getWidth();
-		if ((dispAR * this.canvas.width) > this.canvas.height) {
+		if ((dispAR * this.canvas.width) > this.canvas.height) { 
+			// if expanding the wide image to fit the width of the port causes the height to overflow
+			// just expand to fit the height. 
+			// TODO: Could probably somehow compare aspect ratios to achieve same thing
 			this.dispScale = this.canvas.height / this.scanImg.getHeight();
 			this.dispH = this.canvas.height;
 			this.dispW = this.scanImg.getWidth() * this.dispScale;
 			this.dispY = 0;
-			this.dispX = (this.canvas.width / 2) - (this.dispW / 2);
+			this.dispX = (this.canvas.width - this.dispW) / 2;
 		} else  {
 			this.dispScale = this.canvas.width / this.scanImg.getWidth();
 			this.dispW = this.canvas.width;
 			this.dispH = this.scanImg.getHeight() * this.dispScale;
 			this.dispX = 0;
-			this.dispY = (this.canvas.height / 2) - (this.dispH / 2);
+			this.dispY = (this.canvas.height - this.dispH) / 2;
 		}
-		this.redraw();
+		this.readCorners();
 	}
 
 	CanvasInterface.prototype.readCorners = function() {
-		this.dispCorners[0] = [dispX + (dispScale * this.scanImg.corners.tlx),  dispY + (dispScale * this.scanImg.corners.tly)];
-		this.dispCorners[1] = [dispX + (dispScale * this.scanImg.corners.trx),  dispY + (dispScale * this.scanImg.corners.try)];
-		this.dispCorners[2] = [dispX + (dispScale * this.scanImg.corners.blx),  dispY + (dispScale * this.scanImg.corners.bly)];
-		this.dispCorners[3] = [dispX + (dispScale * this.scanImg.corners.brx),  dispY + (dispScale * this.scanImg.corners.bry)];
+		console.log(this.dispScale);
+		console.log(this.scanImg.corners);
+		this.dispCorners[0] = [this.dispX + (this.dispScale * this.scanImg.corners.tlx),
+							   this.dispY + (this.dispScale * this.scanImg.corners.tly)];
+		this.dispCorners[1] = [this.dispX + (this.dispScale * this.scanImg.corners.trx),  this.dispY + (this.dispScale * this.scanImg.corners.try)];
+		this.dispCorners[3] = [this.dispX + (this.dispScale * this.scanImg.corners.blx),  this.dispY + (this.dispScale * this.scanImg.corners.bly)];
+		this.dispCorners[2] = [this.dispX + (this.dispScale * this.scanImg.corners.brx),  this.dispY + (this.dispScale * this.scanImg.corners.bry)];
 		this.redraw();
 	}
 
 	CanvasInterface.prototype.writeCorners = function() {
 		this.scanImg.corners = {
-			tlx: (dispCorners[0][0] - dispX) / dispScale, tly: (dispCorners[0][1] - dispY) / dispScale,
-			trx: (dispCorners[1][0] - dispX) / dispScale, try: (dispCorners[1][1] - dispY) / dispScale,
-			blx: (dispCorners[2][0] - dispX) / dispScale, bly: (dispCorners[2][1] - dispY) / dispScale,
-			brx: (dispCorners[3][0] - dispX) / dispScale, bry: (dispCorners[3][1] - dispY) / dispScale
+			tlx: (this.dispCorners[0][0] - this.dispX) / this.dispScale, tly: (this.dispCorners[0][1] - this.dispY) / this.dispScale,
+			trx: (this.dispCorners[1][0] - this.dispX) / this.dispScale, try: (this.dispCorners[1][1] - this.dispY) / this.dispScale,
+			brx: (this.dispCorners[2][0] - this.dispX) / this.dispScale, bry: (this.dispCorners[2][1] - this.dispY) / this.dispScale,
+			blx: (this.dispCorners[3][0] - this.dispX) / this.dispScale, bly: (this.dispCorners[3][1] - this.dispY) / this.dispScale
 		}
 	}
 	
 	CanvasInterface.prototype.redraw = function() {
+		//console.log(this.dispCorners);
 		var ctx = this.canvas.getContext("2d");
+		
+		ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+		
+		var outline = new Path2D();
+		var circles = [];
 		ctx.drawImage(this.scanImg.imgElem, this.dispX, this.dispY, this.dispW, this.dispH);
+		ctx.strokeStyle="red";
+		ctx.fillStyle="green";
+		ctx.lineWidth=5;
+		
+		for (var i = 0; i < this.dispCorners.length; i++) {
+			var x = this.dispCorners[i][0];
+			var y = this.dispCorners[i][1];
+			
+			var nx = i+1 >= this.dispCorners.length ? this.dispCorners[0][0] : this.dispCorners[i+1][0];
+			var ny = i+1 >= this.dispCorners.length ? this.dispCorners[0][1] : this.dispCorners[i+1][1];
+			
+			circles[i] = new Path2D();
+			circles[i].arc(x, y, 15, 0, Math.PI*2, false);
+			
+			outline.moveTo(x, y);
+			outline.lineTo(nx, ny);
+		}
+		
+		ctx.stroke(outline);
+		for (var i = 0; i < circles.length; i++) {
+			ctx.fill(circles[i]);
+		}
+	}
+	
+	CanvasInterface.prototype.onClick = function(corner, x, y) { //returns whether click resulted in a change or not
+		//console.log("x: " + (this.dispX) + ", y:" + (this.dispY));
+		if (x < this.dispX || x > (this.dispX + this.dispW) ||
+				y < this.dispY || y > (this.dispY + this.dispH)) {
+			return false;
+		}
+		
+		var newcorners = [x, y];
+		switch (corner) {
+			case "tl":
+				this.dispCorners[0] = newcorners;
+				break;
+			case "tr":
+				this.dispCorners[1] = newcorners;
+				break;
+			case "br":
+				this.dispCorners[2] = newcorners;
+				break;
+			case "bl":
+				this.dispCorners[3] = newcorners;
+				break;
+		}	
+		
+		//this.writeCorners();
+		//console.log(this.scanImg.corners);	
+		this.redraw();
+		return true;
 	}
 	
 	return CanvasInterface;

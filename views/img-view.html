@@ -40,6 +40,29 @@
 		float: none;
 		vertical-align: top;
 	}
+	
+	#cornerTl {
+		border-right:none;
+		border-radius:4px 0 0 0;
+	}
+	
+	#cornerTr {
+		border-radius: 0 4px 0 0;
+	}
+	
+	#cornerBr {
+		border-top: none;
+		border-radius: 0 0 4px 0;
+	}
+	
+	#cornerBl {
+		border-top: none;
+		border-right: none;
+		border-radius: 0 0 0 4px;
+	}
+	
+	
+	
 </style>
 
 
@@ -52,9 +75,21 @@
 </div>
 <div class="row r-margin" id="mainRow" style="display: table;">
 	<div class="col-md-3" id="cornerControls">
-		wd
+		<h4>Image Navigation</h4>
+		<div class="btn-group btn-group-justified">
+		  <a class="btn btn-default">Previous</a>
+		  <a class="btn btn-default">Next</a>
+		</div>
+
+		<h4>Corner Adjustment</h4>
+		<button class="btn btn-default col-md-6">AutoCorners</button>
+		<span  class="label label-default col-md-6">Wadooooo</span>
+		<button class="btn btn-default col-md-6" id="cornerTl">Top Left</button>
+		<button class="btn btn-default col-md-6" id="cornerTr">Top Right</button> 
+		<button class="btn btn-default col-md-6" id="cornerBl">Bottom Left</button>
+		<button class="btn btn-default col-md-6" id="cornerBr">Bottom Right</button>
 	</div>
 	<div class="col-md-9">
-		<canvas width="1600" height="1200" id="cornerCanvas"></canvas>
+		<canvas width="1600" height="1200" id="cornerCanvas" ng-mousedown="cornerClick($event)"></canvas>
 	</div>
 </div>
