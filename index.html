@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Hello!!</title>
+        <link rel="stylesheet" type="text/css" href="css/main.css" />
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+        <link rel="stylesheet" type="text/css" href="css/bootstrap-theme.css" />
+        <!-- Dependencies -->
+        <script src="js/angular-1.4.1/angular.js"></script>
+        <script src="js/angular-1.4.1/angular-route.js"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+        <script src="js/bootstrap/bootstrap.js"></script>
+		<script src="js/bootstrap/bootstrap.file-input.js" ></script>
+		
+        <!-- Model -->
+        <script src="js/scanner-model/scanner-data.js"/></script>
+        <script src="js/scanner-model/image.js"></script>
+        
+        <!-- AngularJS Control -->
+        <script src="js/scanner/app.js"></script>
+		<script src="js/scanner/file-ctrl.js"></script>
+		<script src="js/scanner/img-ctrl.js"></script>
+		<script src="js/scanner/canvas-interface.js"></script>
+        <script src="js/scanner/init.js"></script>
+        <script src="js/scanner/scanner.js"></script>
+    </head>
+    <body ng-app="scannerApp">
+		<div id="naclCont">
+			
+		</div>
+        <div class="container">
+            <div ng-view>
+            </div>
+        </div>
+		
+<!--		<div>
+			<input type="file" id="fileIn" accept="image/*" />
+			<input type="button" value="Find Corners" ng-click="loadim();" />
+            <p>{{images.length}}</p>
+            <ul>
+				
+				<div ng-repeat="image in images" >
+					<li> Image {{$index}}: <img ng-src="{{images[$index].getDataURL()}}"/> </li>
+					<a ng-href="{{im2url($index);}}" >Helooooo</a>
+				</div>
+			</ul>
+        </div>-->
+    </body>
+</html>

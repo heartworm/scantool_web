@@ -1,0 +1,105 @@
+<style type="text/css">
+	.img-notification {
+		text-align: center;
+		font-size: 72pt;
+	}
+	
+	.img-notification span {
+		display: inline;
+		top: 50%;
+	}
+	
+	.thumbnail {
+		display: inline-block;
+		vertical-align: middle;
+		float: none;
+		margin: 0 auto;
+	}
+	
+	.r-margin {
+		margin-top: 10px;
+	}
+	
+	#fileToolbar {
+		margin-top: 25px;
+	}
+	
+	@keyframes rotating {
+	  from {
+		transform: rotate(0deg);
+	  }
+	  to {
+		transform: rotate(360deg);
+	  }
+	}
+	.glyphicon-rotating:before {
+	  animation: rotating 2s linear infinite;
+	}
+	
+	
+</style>
+
+<div class="page-header"><h1>Scan Tool<div class="pull-right"><small>File Selection</small></h1></div></div>
+<div class="row">
+	<div class="btn-group btn-group-lg btn-group-justified" role="group" aria-label="...">
+	  <a type="button" class="btn btn-default btn-primary" ng-click="prev()">Prev Step</a>
+	  <a type="button" class="btn btn-default btn-primary" ng-click="next()">Next Step</a>
+	</div>
+</div>
+<div class="row" id="fileToolbar">
+	<div class="btn-group pull-left">
+		<input multiple class="btn" id="fileIn" type="file" title="Browse..." accept="image/*">
+		<button type="button" ng-click="addImages()" class="btn btn-default"><span class="glyphicon glyphicon-picture"></span> Add Chosen Images</button>
+		<button type="button" ng-click="setSortBy('fileName')" class="btn btn-default" ng-class="sortBy == 'fileName' ? 'btn-success' : ''">
+			<span class="glyphicon glyphicon-list-alt"></span> Sort By Filename
+		</button>
+		<button type="button" ng-click="setSortBy('date')" class="btn btn-default" ng-class="sortBy == 'date' ? 'btn-success' : ''">
+			<span class="glyphicon glyphicon-calendar"></span> Sort By Date Modified
+		</button>
+		<button type="button" ng-click="toggleDescending()" class="btn btn-default">
+			<span class="glyphicon"  ng-class="descending ? 'glyphicon-sort-by-attributes-alt' : 'glyphicon-sort-by-attributes'"></span> Sort Order
+		</button>
+	</div>
+</div>
+<div class="alert alert-info r-margin"><span class="glyphicon glyphicon-question-sign"></span> Add and order the pictures you would like to scan on this page.</div>
+<div class="row list-group r-margin">
+	<div ng-repeat="img in images">
+		<div class="row list-group-item" style="min-height: 150px" ng-class="statusClassList(img)">
+			<div ng-switch="img.imageLoadStatus">
+				<div ng-switch-when="0"> <!-- Status.INITIAL -->
+					<div class="col-sm-3 img-notification"><span class="glyphicon glyphicon-cog glyphicon-rotating"></span></div>
+				</div>
+				<div ng-switch-when="1"> <!-- Status.PROCESSING -->
+					<div class="col-sm-3 img-notification"><span class="glyphicon glyphicon-cog glyphicon-rotating"></span></div>
+				</div>
+				<div ng-switch-when="2"> <!-- Status.SUCCESS --> 
+<!--					<div class="col-sm-3 img-notification"><span class="glyphicon glyphicon-ok"></span></div>-->
+					<div class="col-sm-3">
+						<img class="thumbnail img-responsive" ng-src="{{img.getThumbnailURI()}}" />
+					</div>
+				</div>
+				<div ng-switch-when="3"> <!-- Status.FAILED --> 
+					<div class="col-sm-3 img-notification"><span class="glyphicon glyphicon-exclamation-sign"></span></div>
+				</div>
+			</div>
+			<div class="col-sm-9 img-description">
+				<div class="row">
+					<p><h4>{{img.fileName}}</h4><label class="label" ng-class="statusClassLabel(img)">{{statusString(img)}}</label></p>
+				</div>
+				<div class="row">
+					<button type="button" class="btn btn-default" ng-click="imgUp($index)" ng-disabled="$index == 0">
+						<span class="glyphicon glyphicon-arrow-up"></span> Up
+					</button>
+					<button type="button" class="btn btn-default" ng-click="imgDown($index)" ng-disabled="$index == images.length - 1">
+						<span class="glyphicon glyphicon-arrow-down"></span> Down
+					</button>
+					<button type="button" class="btn btn-warning" ng-click="imgRemove
+																			($index)">
+						<span class="glyphicon glyphicon-trash"></span> Remove
+					</button>
+				</div>
+			
+			</div>
+		</div>
+	</div>
+</div>

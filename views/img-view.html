@@ -1,0 +1,60 @@
+<style type="text/css">
+	.img-tall {
+		height:100px !important;
+	}
+	
+	.img-wide {
+		height: 100px !important;
+	}
+	
+	#cornerControls:after {
+		content: "";
+		position: absolute;
+		z-index: 100;
+		width: 1px;
+		height: 90%;
+		top: 5%;
+		right: 0;
+		background-color: #eeeeee;
+	}
+	
+	#cornerCanvas {
+		border: 2px dotted black;
+		width: 90%;
+		display: block;
+		height: auto;
+		margin: 0 auto;
+	}
+	
+	#mainRow {
+		display: table;
+	}
+	
+	.r-margin {
+		margin-top: 10px;
+	}
+	
+	
+	#mainRow > div {
+		display: table-cell;
+		float: none;
+		vertical-align: top;
+	}
+</style>
+
+
+<div class="page-header"><h1>Scan Tool<div class="pull-right"><small>Image Editing</small></h1></div></div>
+<div class="row">
+	<div class="btn-group btn-group-lg btn-group-justified" role="group" aria-label="...">
+	  <a type="button" class="btn btn-default btn-primary" ng-click="prev()">Prev Step</a>
+	  <a type="button" class="btn btn-default btn-primary" ng-click="next()">Next Step</a>
+	</div>
+</div>
+<div class="row r-margin" id="mainRow" style="display: table;">
+	<div class="col-md-3" id="cornerControls">
+		wd
+	</div>
+	<div class="col-md-9">
+		<canvas width="1600" height="1200" id="cornerCanvas"></canvas>
+	</div>
+</div>
