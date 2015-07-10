@@ -1,6 +1,7 @@
 angular.module("scannerApp").service("Scanner", function(ScannerData, Status) {
 	
 	this.onMessage = function(message) {
+		console.log(message);
 		if (message.command === "update") {
 			var output = {};
 			if (message.image.deskewStatus !== undefined) {

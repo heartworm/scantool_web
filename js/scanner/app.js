@@ -1,4 +1,4 @@
-angular.module('scannerApp', ["ngRoute", "scannerModel"]);
+angular.module('scannerApp', ["ngRoute", "cfp.hotkeys", "scannerModel"]);
 angular.module("scannerApp").config(["$routeProvider", function($routeProvider) {
 	var checkPage = function($q, $window, $rootScope, $location, Status, ScannerData) {
 		var def = $q.defer();

@@ -57,8 +57,8 @@ angular.module("scannerApp").factory("CanvasInterface", function() {
 		var outline = new Path2D();
 		var circles = [];
 		ctx.drawImage(this.scanImg.imgElem, this.dispX, this.dispY, this.dispW, this.dispH);
-		ctx.strokeStyle="red";
-		ctx.fillStyle="green";
+		ctx.strokeStyle = "red";
+		var circleFills = ["rgb(51, 122, 183)", "rgb(92, 184, 92)", "rgb(91, 192, 222)", "rgb(255, 255, 255)"];
 		ctx.lineWidth=5;
 		
 		for (var i = 0; i < this.dispCorners.length; i++) {
@@ -69,6 +69,7 @@ angular.module("scannerApp").factory("CanvasInterface", function() {
 			var ny = i+1 >= this.dispCorners.length ? this.dispCorners[0][1] : this.dispCorners[i+1][1];
 			
 			circles[i] = new Path2D();
+			
 			circles[i].arc(x, y, 15, 0, Math.PI*2, false);
 			
 			outline.moveTo(x, y);
@@ -76,8 +77,12 @@ angular.module("scannerApp").factory("CanvasInterface", function() {
 		}
 		
 		ctx.stroke(outline);
+		ctx.strokeStyle = "black";
+		ctx.lineWidth = 3;
 		for (var i = 0; i < circles.length; i++) {
+			ctx.fillStyle = circleFills[i];
 			ctx.fill(circles[i]);
+			ctx.stroke(circles[i]);
 		}
 	}
 	
@@ -104,8 +109,7 @@ angular.module("scannerApp").factory("CanvasInterface", function() {
 				break;
 		}	
 		
-		//this.writeCorners();
-		//console.log(this.scanImg.corners);	
+		this.writeCorners();	
 		this.redraw();
 		return true;
 	}
