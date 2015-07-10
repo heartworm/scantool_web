@@ -1,4 +1,4 @@
-angular.module("scannerApp").run(function($rootScope, Scanner, ScannerData, Status) {
+angular.module("scannerApp").run(function($rootScope, $location, $window, Scanner, ScannerData, Status) {
 	window.rootsc = $rootScope;//DEBUG LINE
 	$rootScope.Status = Status;
 	$rootScope.log = "Initialised";
@@ -35,7 +35,7 @@ angular.module("scannerApp").run(function($rootScope, Scanner, ScannerData, Stat
 			if (obj.command == "error")
 				$rootScope.onCrash(obj.type + ": " + obj.what);
 			else
-				Scanner.onMessage(message);
+				Scanner.onMessage(obj);
 		}	
 		
 		$rootScope.$apply();
@@ -50,6 +50,8 @@ angular.module("scannerApp").run(function($rootScope, Scanner, ScannerData, Stat
 	$rootScope.onCrash = function(str) {
 		$rootScope.naclStatus = Status.FAILED;
 		$rootScope.addLog(str);
+		$location.path("/log");
+		$window.alert("An error has occured. Please inspect log");
 	}
 	
 	$rootScope.naclCont.innerHTML = '<embed name="naclMod" id="naclMod" width="0" height="0" src="app.nmf" type="application/x-pnacl">';

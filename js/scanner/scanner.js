@@ -1,4 +1,4 @@
-angular.module("scannerApp").service("Scanner", function(ScannerData, Status) {
+angular.module("scannerApp").service("Scanner", function($rootScope, ScannerData, Status) {
 	
 	this.onMessage = function(message) {
 		console.log(message);
@@ -15,9 +15,11 @@ angular.module("scannerApp").service("Scanner", function(ScannerData, Status) {
 						deskewCanvas.height = message.image.deskewHeight;
 						deskewCanvas.width = message.image.deskewWidth;
 						var ctx = deskewCanvas.getContext("2d");
-						var data = Uint8ClampedArray(message.image.deskewData);
-						ctx.putImageData(data, 0, 0);
+						var imData = new ImageData(new Uint8ClampedArray(message.image.deskewData), message.image.deskewWidth,
+											message.image.deskewHeight);
+						ctx.putImageData(imData, 0, 0);
 						output.deskewCanvas = deskewCanvas;
+						window.open(deskewCanvas.toDataURL("image/jpeg", 0.1));
 						break;
 					default: 
 						return;
@@ -36,9 +38,25 @@ angular.module("scannerApp").service("Scanner", function(ScannerData, Status) {
 						return;
 				}
 			}
-			ScannerData.updateImage(message.image.number, message.image.hash, output);
+			ScannerData.updateImage(message.image.number, message.image.id, output);
 		}
 	};
+	
+	this.deskew = function(img, number) {
+		var msg = {
+			command: "deskew",
+			image: {
+				number: number,
+				id: img.id,
+				data: img.getImageData(),
+				height: img.getHeight(),
+				width: img.getWidth(),
+				corners: img.corners
+			}
+		};
+		console.log(msg);
+		$rootScope.naclMod.postMessage(msg);
+	}
 	
 	this.onUpdate = function() {
 		if (typeof this.updateCb === "function") {

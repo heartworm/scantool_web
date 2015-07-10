@@ -54,6 +54,10 @@ angular.module("scannerApp").controller("EditImgCtrl", function($scope, $locatio
 		}
 	}
 	
+	$scope.deskew = function() {
+		Scanner.deskew(ScannerData.images[$scope.curIndex], $scope.curIndex);
+	}
+	
 	hotkeys.bindTo($scope).add({
 		combo: 'q', callback: function() {$scope.toggleCorner("tl");}
 	}).add({
@@ -66,6 +70,8 @@ angular.module("scannerApp").controller("EditImgCtrl", function($scope, $locatio
 		combo: 's', callback: $scope.prevImg
 	}).add({
 		combo: 'w', callback: $scope.nextImg
+	}).add({
+		combo: 'x', callback: $scope.deskew
 	}); //limits hotkey lifecycle to this page
 
 });

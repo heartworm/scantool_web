@@ -4,8 +4,7 @@ angular.module("scannerModel", []).service("ScannerData", function($rootScope, S
 	
 	this.addImages = function(files) {
 		for (var i = 0; i < files.length; i++) {
-			var im = new ScanImage(files[i]);
-			im.updateCb = this.onUpdate;
+			var im = new ScanImage(files[i], nextUID(), this.onUpdate);
 			this.images.push(im);
 		}
 	};
@@ -31,12 +30,13 @@ angular.module("scannerModel", []).service("ScannerData", function($rootScope, S
 				else 
 					return;
 			}
-			
+			console.log(old);
 			for (prop in im) {
 				if (im.hasOwnProperty(prop)) {
 					old[prop] = im[prop]; //update all properties required
 				}
 			}
+			console.log(old);
 		}
 	};
 	

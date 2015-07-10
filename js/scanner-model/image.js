@@ -2,7 +2,8 @@ angular.module("scannerModel").factory("ScanImage", function(Status) {
 	//Factory, runs passed function then returned value is issued as a singleton to dependency injector
 	//In this case the singleton is a constructor (of a class), so our classes can be defined within a module namespace
 
-	function ScanImage(fileIn) {
+	function ScanImage(fileIn, id, cb) {
+		this.updateCb = cb;		
 		
 		this.fileName = fileIn.name;
 		this.dateModified = fileIn.lastModifiedDate;
@@ -22,7 +23,7 @@ angular.module("scannerModel").factory("ScanImage", function(Status) {
 		this.fileReader.readAsDataURL(fileIn);
 
 
-		this.id = "wadoo";
+		this.id = id;
 		this.canvas = document.createElement("canvas");
 
 		this.deskewCanvas = null;
@@ -86,6 +87,11 @@ angular.module("scannerModel").factory("ScanImage", function(Status) {
 		if (typeof this.updateCb === "function") {
 			this.updateCb();
 		}
+	}
+	
+	ScanImage.prototype.getImageData = function() {
+		var ctx = this.canvas.getContext("2d");
+		return ctx.getImageData(0, 0, this.getWidth(), this.getHeight()).data.buffer;
 	}
 
 	ScanImage.prototype.getThumbnailURI = function() {
