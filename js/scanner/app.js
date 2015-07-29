@@ -24,22 +24,6 @@ angular.module("scannerApp").config(["$routeProvider", function($routeProvider) 
 		return def.resolve(true);       
     }
 	
-	/*var checkImgs = function($q, $window, $location, ScannerData) {
-		console.log("checkimgs and shit");
-		var def = $q.defer();
-		if (ScannerData.images.length == 0) {
-			$location.path("/step1");
-			$window.alert("No images in list. Add images to continue.");
-			return def.reject();
-		} else if (!ScannerData.imagesReady()) {
-			$location.path("/step1");
-			$window.alert("One or more images in the list haven't loaded. Remove them before continuing.");
-			return def.reject();
-		} else {
-			return def.resolve(true);
-		}
-	}*/
-	
     $routeProvider.when("/log", {
 		controller: "LogCtrl",
 		templateUrl: "views/log-view.html"
@@ -52,6 +36,12 @@ angular.module("scannerApp").config(["$routeProvider", function($routeProvider) 
     }).when("/step2", {
 		controller: "EditImgCtrl",
 		templateUrl: "views/img-view.html",
+		resolve: {
+			factory: checkPage
+		}
+	}).when("/step3", {
+		controller: "OutputCtrl",
+		templateUrl: "views/out-view.html",
 		resolve: {
 			factory: checkPage
 		}

@@ -1,0 +1,45 @@
+<style type="text/css">
+	#mainRow {
+		margin-top: 10px;
+	}
+	
+	#jpegQuality {
+		width: 13em;
+		padding-left: 1em;
+	}
+</style>
+
+<div class="page-header"><h1>Scan Tool<div class="pull-right"><small>Output</small></h1></div></div>
+<div class="row">
+	<div class="btn-group btn-group-lg btn-group-justified" role="group" aria-label="...">
+	  <a type="button" class="btn btn-default btn-primary" ng-click="prev()">Prev Step</a>
+	  <a type="button" class="btn btn-default btn-primary" ng-click="next()">Next Step</a>
+	</div>
+</div>
+
+<div class="row" id="mainRow">
+	<div class="col-md-4">
+		<div class="panel panel-default" id="mainRow">
+			<div class="panel-heading"><h3 class="panel-title">Export Settings</h3></div>
+			<div class="panel-body">
+				<h4>Output Type</h4>
+				<div class="btn-group">
+					<button type="button" class="btn btn-default" ng-click="outputType = 'JPEG'"
+							ng-class="outputType == 'JPEG' ? 'active' : ''">JPEG</button>
+					<button type="button" class="btn btn-default" ng-click="outputType = 'PNG'"
+							ng-class="outputType == 'PNG' ? 'active' : ''">PNG</button>
+					<button type="button" class="btn btn-default" ng-click="outputType = 'PDF'"
+							ng-class="outputType == 'PDF' ? 'active' : ''">PDF</button>
+				</div> 
+				<div ng-hide="outputType == 'PNG'" class="input-group" id="jpegQuality">
+					<span class="input-group-addon">JPEG Quality</span>
+					<input type="number" min="0" max="100" ng-model="jpegQuality"
+					class="form-control" id="qualityIn" value="85">
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="">
+	
+	</div>
+</div>

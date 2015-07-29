@@ -19,7 +19,11 @@ angular.module("scannerApp").service("Scanner", function($rootScope, ScannerData
 											message.image.deskewHeight);
 						ctx.putImageData(imData, 0, 0);
 						output.deskewCanvas = deskewCanvas;
-						window.open(deskewCanvas.toDataURL("image/jpeg", 0.1));
+						var doc = new jsPDF();
+						
+						//window.open(deskewCanvas.toDataURL("image/jpeg", 0.1));
+						doc.addImage(deskewCanvas.toDataURL("image/jpeg", 0.1), 'JPEG', 0, 0, 210, 297);
+						console.log(doc.output("datauristring"));
 						break;
 					default: 
 						return;
@@ -42,21 +46,41 @@ angular.module("scannerApp").service("Scanner", function($rootScope, ScannerData
 		}
 	};
 	
-	this.deskew = function(img, number) {
-		var msg = {
-			command: "deskew",
-			image: {
-				number: number,
-				id: img.id,
-				data: img.getImageData(),
-				height: img.getHeight(),
-				width: img.getWidth(),
-				corners: img.corners
+	this.autoCorners = function(img, number) {
+		if (img.cornersStatus !== Status.PROCESSING) { //user may spam the autocorners button		
+			var msg = {
+				command: "corners",
+				image: {
+					number: number,
+					id: img.id,
+					data: img.getImageData(),
+					height: img.getHeight(),
+					width: img.getWidth(),
+					corners: img.corners
+				}
 			}
-		};
-		console.log(msg);
-		$rootScope.naclMod.postMessage(msg);
-	}
+			img.cornersStatus = Status.PROCESSING;
+			$rootScope.naclMod.postMessage(msg);
+		}
+	};
+	
+	this.deskew = function(img, number) {
+		if (img.deskewstatus !== Status.PROCESSING) {
+			var msg = {
+				command: "deskew",
+				image: {
+					number: number,
+					id: img.id,
+					data: img.getImageData(),
+					height: img.getHeight(),
+					width: img.getWidth(),
+					corners: img.corners
+				}
+			};
+			console.log(msg);
+			$rootScope.naclMod.postMessage(msg);
+		}
+	};
 	
 	this.onUpdate = function() {
 		if (typeof this.updateCb === "function") {

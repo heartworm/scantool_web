@@ -29,6 +29,7 @@ angular.module("scannerModel").factory("ScanImage", function(Status) {
 		this.deskewCanvas = null;
 		this.deskewStatus = Status.INITIAL;
 		this.cornersStatus = Status.INITIAL;
+		this.cornersErr = "";
 
 	}
 
@@ -119,6 +120,15 @@ angular.module("scannerModel").factory("ScanImage", function(Status) {
 	
 	ScanImage.prototype.getHeight = function() {
 		return this.imgElem.height;
+	}
+	
+	ScanImage.prototype.updateProperty = function(prop, val) {
+		if (prop === "cornersStatus" || prop === "corners") {
+			if (this.cornersStatus === Status.INITIAL) {
+				return;
+			}
+		}
+		this[prop] = val;
 	}
 
 	return ScanImage;

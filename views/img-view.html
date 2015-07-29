@@ -100,13 +100,16 @@
 		</div>
 
 		<h4>Corner Adjustment</h4>
-		<button class="btn btn-default col-md-12" id="autoCornerBtn">AutoCorners</button>
-		<span  class="label label-default col-md-12" id="autoCornerStatus">
-			Wadooooo
+		<button class="btn btn-default col-md-12" id="autoCornerBtn" ng-click="autoCorners()">
+			AutoCorners
+		</button>
+		<span class="label col-md-12" id="autoCornerStatus" ng-class="statusClassLabel()">
+			{{statusString()}}
 		</span>
 		
 		<span class="alert alert-info col-md-12" id="cornerInstruction">
-			Click on a below button then click on the image to move the selected corner. Press <kbd>?</kbd> for keyboard shortcuts.
+			Click on a below button then click on the image to move the selected corner. 
+			Press <kbd>?</kbd> for keyboard shortcuts.
 		</span>
 		<button class="btn btn-default btn-primary col-md-6" id="cornerBtnTl" ng-click="toggleCorner('tl')"
 				ng-class="editCorner === 'tl' ? 'active' : ''">Top Left - <kbd>Q</kbd></button>

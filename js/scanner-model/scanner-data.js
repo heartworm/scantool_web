@@ -16,7 +16,7 @@ angular.module("scannerModel", []).service("ScannerData", function($rootScope, S
 	this.updateImage = function(number, id, im) {
 		if (number !== undefined && id !== undefined) {
 			//get the old one, if we're lucky itll be in the same spot
-			// else just search thru em until we find one with exactly the same img (hash)
+			// else just search thru em until we find one with exactly the same img (id == id)
 			// worst case user deleted the photo, return gracefully
 			var old = this.images[number];
 			if (old.id !== id) {
@@ -32,8 +32,8 @@ angular.module("scannerModel", []).service("ScannerData", function($rootScope, S
 			}
 			console.log(old);
 			for (prop in im) {
-				if (im.hasOwnProperty(prop)) {
-					old[prop] = im[prop]; //update all properties required
+				if (im.hasOwnProperty(prop)) { //dont include weird ass inherited properties
+					old.updateProperty(prop, im[prop]);
 				}
 			}
 			console.log(old);

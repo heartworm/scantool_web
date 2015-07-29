@@ -1,11 +1,19 @@
-angular.module("scannerApp").controller("EditImgCtrl", function($scope, $location, hotkeys, ScannerData, Scanner, CanvasInterface){
+angular.module("scannerApp").controller("EditImgCtrl", function($scope, $location, hotkeys, Status, ScannerData, Scanner, CanvasInterface){
 	$scope.prev = function() { $location.path("/step1"); }
+	$scope.next = function() { $location.path("/step3"); }
 		
 	$scope.images = ScannerData.images;
 	$scope.curIndex = 0;
 	var canvas = $("#cornerCanvas")[0];
 	var canvasInt = new CanvasInterface(canvas, $scope.images[0]);
 	$scope.editCorner = "";
+	
+	$scope.$watch(function() {
+		return $scope.images[$scope.curIndex].corners;
+	}, function() {
+		canvasInt.loadImage($scope.images[$scope.curIndex]);
+	});
+	
 	
 	$scope.prevImg = function() {
 		if ($scope.curIndex > 0)
@@ -42,7 +50,10 @@ angular.module("scannerApp").controller("EditImgCtrl", function($scope, $locatio
 			x *= canvas.width / $(canvas).width();
 			y *= canvas.height / $(canvas).height();
 
-			if (canvasInt.onClick($scope.editCorner, x, y)) $scope.editCorner = "";
+			if (canvasInt.onClick($scope.editCorner, x, y)) { 
+				$scope.images[$scope.curIndex].cornersStatus = Status.INITIAL;
+				$scope.editCorner = ""; 
+			}
 		}
 	}
 	
@@ -56,6 +67,40 @@ angular.module("scannerApp").controller("EditImgCtrl", function($scope, $locatio
 	
 	$scope.deskew = function() {
 		Scanner.deskew(ScannerData.images[$scope.curIndex], $scope.curIndex);
+	}
+	
+	$scope.autoCorners = function() {
+		Scanner.autoCorners(ScannerData.images[$scope.curIndex], $scope.curIndex);
+	}
+	
+	$scope.statusClassLabel = function() {
+		switch($scope.images[$scope.curIndex].cornersStatus) {
+			case Status.FAILED:
+				return "label-danger";
+			case Status.INITIAL:
+				return "label-default";
+			case Status.PROCESSING:
+				return "label-warning";
+			case Status.SUCCESS:
+				return "label-success";
+			default:
+				return "";
+		}
+	}
+	
+	$scope.statusString = function() {
+		switch($scope.images[$scope.curIndex].cornersStatus) {
+			case Status.FAILED:
+				return "AutoCorners failed: " + $scope.images[$scope.curIndex].cornersErr;
+			case Status.INITIAL:
+				return "AutoCorners disabled.";
+			case Status.PROCESSING:
+				return "Finding corners...";
+			case Status.SUCCESS:
+				return "Corners found.";
+			default:
+				return "default";
+		}
 	}
 	
 	hotkeys.bindTo($scope).add({
