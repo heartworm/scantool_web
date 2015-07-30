@@ -2,9 +2,34 @@
 angular.module("scannerModel", []).service("ScannerData", function($rootScope, ScanImage, Status) {
 	this.images = [];
 	
+	var updateCbs = [
+		function() {
+			$rootScope.$apply();
+		}
+	];
+	
+	var onUpdate = function() {
+		for (var i = 0; i < updateCbs.length; i++) {			
+			if (typeof updateCbs[i] === "function") {
+				updateCbs[i]();
+			}
+		}	
+	};
+	
+	this.addUpdateCb = function(func) {
+		if (typeof func === "function") updateCbs.push(func);
+	}
+	
+	this.delUpdateCb = function(func) {
+		var index = updateCbs.indexOf(func);
+		if (index !== -1) {
+			updateCbs.splice(index, 1);
+		}
+	}
+	
 	this.addImages = function(files) {
 		for (var i = 0; i < files.length; i++) {
-			var im = new ScanImage(files[i], nextUID(), this.onUpdate);
+			var im = new ScanImage(files[i], nextUID(), onUpdate);
 			this.images.push(im);
 		}
 	};
@@ -21,32 +46,47 @@ angular.module("scannerModel", []).service("ScannerData", function($rootScope, S
 			var old = this.images[number];
 			if (old.id !== id) {
 				var match = undefined;
-				jQuery.each(this.images, function(ind, obj) {
-					if (obj.id === im.id) match = obj;
-				});
+				
+				for(var i = 0; i < this.images.length; i++) {
+					if (this.images[i].id === im.id) match = this.images[i];
+				}
 				
 				if (match !== undefined) 
 					old = match;
 				else 
 					return;
 			}
-			console.log(old);
 			for (prop in im) {
 				if (im.hasOwnProperty(prop)) { //dont include weird ass inherited properties
 					old.updateProperty(prop, im[prop]);
 				}
-			}
-			console.log(old);
+			}	
 		}
 	};
 	
+	this.resetDeskewStatus = function() {
+		for (var i = 0; i < this.images.length; i++) {
+			this.images[i].deskewStatus = Status.INITIAL;
+		}
+	}
+	
 	this.imagesReady = function() {
 		for (var i = 0; i < this.images.length; i++) {
-			if (this.images[i].imageLoadStatus != 2) {
+			if (this.images[i].imageLoadStatus !== Status.SUCCESS) {
 				return false;		
 			}
 		};
 		return true;
+	}
+	
+	this.deskewReadyCount = function () {
+		var count = 0;
+		for (var i = 0; i < this.images.length; i++) {
+			if (this.images[i].deskewStatus === Status.SUCCESS) {
+				count++;
+			}
+		};
+		return (count < this.images.length) ? count : -1;
 	}
 	
 	this.sortBy = function(field, descending) {
@@ -82,12 +122,10 @@ angular.module("scannerModel", []).service("ScannerData", function($rootScope, S
 		this.images[b] = tmp;
 	}
 	
-	this.onUpdate = function() {
-		$rootScope.$apply();	
-	};
+
 	
 	//switched from a hash to a counting UID, as user adding same file twice could be a wanted characteristic
-	//	(dunno why) and would screw up with a unique hash. Google closure if forget how works...
+	//	(dunno why) and would screw up with a unique hash. Google closure if forget how it works...
 	var nextUID = (function() {
 		var id = 0;
 		return function() { return id++; };

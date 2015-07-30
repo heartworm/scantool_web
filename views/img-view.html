@@ -1,84 +1,4 @@
-<style type="text/css">
-	.img-tall {
-		height:100px !important;
-	}
-	
-	.img-wide {
-		height: 100px !important;
-	}
-	
-	#cornerControls:after {
-		content: "";
-		position: absolute;
-		z-index: 100;
-		width: 1px;
-		height: 90%;
-		top: 5%;
-		right: 0;
-		background-color: #eeeeee;
-	}
-	
-	#cornerCanvas {
-		border: 2px dotted black;
-		width: 90%;
-		display: block;
-		height: auto;
-		margin: 0 auto;
-	}
-	
-	#mainRow {
-		display: table;
-		margin-top: 10px;
-	}
-	
-	#mainRow > div {
-		display: table-cell;
-		float: none;
-		vertical-align: top;
-	}
-	
-	#autoCornerBtn {
-		border-radius: 4px 4px 0 0;
-		border-bottom: none;
-	}
-	
-	#autoCornerStatus {
-		border-radius: 0 0 4px 4px;
-		margin-bottom: 10px;
-	}
-	
-	#cornerBtnTl {
-		border-right:none;
-		border-radius: 0;
-	}
-	
-	#cornerBtnTr {
-		border-radius: 0;
-	}
-	
-	#cornerBtnBr {
-		border-top: none;
-		border-radius: 0 0 4px 0;
-	}
-	
-	#cornerBtnBl {
-		border-top: none;
-		border-right: none;
-		border-radius: 0 0 0 4px;
-	}
-	
-	#cornerInstruction {
-		margin-bottom: 0;
-		border-bottom: none;
-		border-bottom-left-radius: 0;
-		border-bottom-right-radius: 0;
-	}
-	
-	
-</style>
-
-
-<div class="page-header"><h1>Scan Tool<div class="pull-right"><small>Image Editing</small></h1></div></div>
+<div class="page-header"><h1>Scan Tool<div class="pull-right"><small>Enhancements and Corrections</small></h1></div></div>
 <div class="row">
 	<div class="btn-group btn-group-lg btn-group-justified" role="group" aria-label="...">
 	  <a type="button" class="btn btn-default btn-primary" ng-click="prev()">Prev Step</a>
@@ -119,6 +39,8 @@
 				ng-class="editCorner === 'bl' ? 'active' : ''">Bottom Left - <kbd>A</kbd></button>
 		<button class="btn btn-default btn-info col-md-6" id="cornerBtnBr" ng-click="toggleCorner('br')"
 				ng-class="editCorner === 'br' ? 'active' : ''">Bottom Right - <kbd>D</kbd></button>
+		<button class="btn btn-default btn-warning col-md-12" id="cornerBtnAll" ng-click="toggleCorner('all')"
+				ng-class="editAll ? 'active' : ''">Edit All Corners - <kbd>R</kbd></button>
 	</div>
 	<div class="col-md-9">
 		<canvas width="1600" height="1200" id="cornerCanvas" ng-mousedown="cornerClick($event)"></canvas>

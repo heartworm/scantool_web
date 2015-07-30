@@ -1,13 +1,4 @@
-angular.module("scannerApp").controller("AddImgCtrl", function($rootScope, $scope, $window, $location, Status, Scanner, ScannerData){		
-	$scope.hasAlert = function() {
-		return $rootScope.alertMsg !== undefined;
-	}
-	
-	$scope.getAlertMsg = function() {
-		var tmp = $rootScope.alertMsg;
-		delete $rootScope.alertMsg; 
-		return tmp;
-	};
+angular.module("scannerApp").controller("AddImgCtrl", function($rootScope, $scope, $window, $location, Status, Scanner, ScannerData){
 	
 	//navigation
 	$scope.prev = function() {

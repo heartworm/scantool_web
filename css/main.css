@@ -1,0 +1,133 @@
+/*File Selection*/
+
+	.img-notification {
+		text-align: center;
+		font-size: 72pt;
+	}
+
+	.img-notification span {
+		display: inline;
+		top: 50%;
+	}
+
+	.thumbnail {
+		display: inline-block;
+		vertical-align: middle;
+		float: none;
+		margin: 0 auto;
+	}
+
+	.r-margin {
+		margin-top: 10px;
+	}
+
+	#fileToolbar {
+		margin-top: 25px;
+	}
+
+	@keyframes rotating {
+	  from {
+		transform: rotate(0deg);
+	  }
+	  to {
+		transform: rotate(360deg);
+	  }
+	}
+
+	.glyphicon-rotating:before {
+	  animation: rotating 2s linear infinite;
+	}
+
+/* Image Editing */
+
+	#cornerControls:after {
+		content: "";
+		position: absolute;
+		z-index: 100;
+		width: 1px;
+		height: 90%;
+		top: 5%;
+		right: 0;
+		background-color: #eeeeee;
+	}
+	
+	#cornerCanvas {
+		border: 2px dotted black;
+		width: 90%;
+		display: block;
+		height: auto;
+		margin: 0 auto;
+	}
+	
+	#autoCornerBtn {
+		border-radius: 4px 4px 0 0;
+		border-bottom: none;
+	}
+	
+	#autoCornerStatus {
+		border-radius: 0 0 4px 4px;
+		margin-bottom: 10px;
+	}
+	
+	#cornerBtnTl {
+		border-right:none;
+		border-radius: 0;
+	}
+	
+	#cornerBtnTr {
+		border-radius: 0;
+	}
+	
+	#cornerBtnBr {
+		border-top: none;
+		border-radius: 0;
+	}
+	
+	#cornerBtnBl {
+		border-top: none;
+		border-right: none;
+		border-radius: 0;
+	}
+	
+	#cornerBtnAll {
+		border-top: none;
+		border-radius: 0 0 4px 4px;
+	}
+	
+	#cornerInstruction {
+		margin-bottom: 0;
+		border-bottom: none;
+		border-bottom-left-radius: 0;
+		border-bottom-right-radius: 0;
+	}
+
+/* Output */
+	
+	#progressBar {
+		min-width: 15em;
+	}
+
+/* Global */
+
+	#mainRow {
+		display: table;
+		margin-top: 10px;
+	}
+	
+	#mainRow > div {
+		display: table-cell;
+		float: none;
+		vertical-align: top;
+	}
+
+/* Utility */
+
+	.padding-top {
+		padding-top: 5px;
+	}
+	
+	.margin-top {
+		margin-top: 5px;
+	}
+	
+	

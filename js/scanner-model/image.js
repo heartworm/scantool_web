@@ -1,8 +1,12 @@
 angular.module("scannerModel").factory("ScanImage", function(Status) { 
+	var MAXW = 2480;
+	var MAXH = 3508;
+	
 	//Factory, runs passed function then returned value is issued as a singleton to dependency injector
 	//In this case the singleton is a constructor (of a class), so our classes can be defined within a module namespace
 
 	function ScanImage(fileIn, id, cb) {
+		this.id = id;		
 		this.updateCb = cb;		
 		
 		this.fileName = fileIn.name;
@@ -18,25 +22,21 @@ angular.module("scannerModel").factory("ScanImage", function(Status) {
 		this.imgElem = new Image();
 		this.imgElem.onload = $.proxy(this.onImageLoad, this);
 		this.imgElem.onerror = $.proxy(this.onImageError, this);
-		//END
-
-		this.fileReader.readAsDataURL(fileIn);
-
-
-		this.id = id;
-		this.canvas = document.createElement("canvas");
-
-		this.deskewCanvas = null;
+		//END	
+		
+		this.deskewImgElem = null;
 		this.deskewStatus = Status.INITIAL;
+		
 		this.cornersStatus = Status.INITIAL;
 		this.cornersErr = "";
+		
+		this.fileReader.readAsDataURL(fileIn);	
 
 	}
 
 	//Loading Callbacks
 
 	ScanImage.prototype.onReadError = function() {
-		console.log("onreaderror");
 		this.imageLoadStatus = Status.FAILED;
 		this.imageLoadReason = this.fileReader.error.name;
 
@@ -46,26 +46,18 @@ angular.module("scannerModel").factory("ScanImage", function(Status) {
 	};
 
 	ScanImage.prototype.onReadLoad = function() {
-		console.log("onreadload");
 		this.imageLoadStatus = Status.PROCESSING;
 		this.imgElem.src = this.fileReader.result;
 		this.onUpdate();
 	};
 
 	ScanImage.prototype.onImageLoad = function() {
-		console.log("onimageload");
-		this.canvas.height = this.imgElem.height;
-		this.canvas.width = this.imgElem.width;
-		var ctx = this.canvas.getContext('2d');
-		ctx.drawImage(this.imgElem, 0, 0);
-		
 		this.corners = {
 			tlx: 0, tly: 0,
 			trx: this.getWidth(), try: 0,
 			blx: 0, bly: this.getHeight(),
 			brx: this.getWidth(), bry: this.getHeight()
 		};
-
 		this.imageLoadStatus = Status.SUCCESS;
 
 		//Cleanup
@@ -73,9 +65,9 @@ angular.module("scannerModel").factory("ScanImage", function(Status) {
 		delete this.fileReader;
 		this.onUpdate();
 	};
+	
 
 	ScanImage.prototype.onImageError  = function() {
-		console.log("onimageerror");
 		this.imageLoadStatus = Status.FAILED;
 		this.imageLoadReason = "Could not read file into image.";
 
@@ -90,15 +82,33 @@ angular.module("scannerModel").factory("ScanImage", function(Status) {
 		}
 	}
 	
-	ScanImage.prototype.getImageData = function() {
-		var ctx = this.canvas.getContext("2d");
-		return ctx.getImageData(0, 0, this.getWidth(), this.getHeight()).data.buffer;
+	ScanImage.prototype.setDeskewImg = function(dataURL) {
+		var self = this;
+		this.deskewImgElem = new Image();
+		this.deskewImgElem.onload = function() {
+			self.onUpdate();
+			self.deskewStatus = Status.SUCCESS;	
+		};
+		this.deskewImgElem.onerror = function() {
+			self.deskewStatus = Status.FAILED;
+		};
+		this.deskewImgElem.src = dataURL;
+	}
+	
+	ScanImage.prototype.getImageData = function() { 
+		var cnv = document.createElement("canvas");
+		cnv.height = this.getHeight();
+		cnv.width = this.getWidth();
+		var ctx = cnv.getContext("2d");
+		ctx.drawImage(this.imgElem, 0, 0, this.getWidth(), this.getHeight());
+		var out = ctx.getImageData(0, 0, this.getWidth(), this.getHeight()).data.buffer;
+		return out;
 	}
 
 	ScanImage.prototype.getThumbnailURI = function() {
 		if (this.thumbnailURI !== undefined) return this.thumbnailURI;
 		else {
-			var ar = this.canvas.width / this.canvas.height;
+			var ar = this.getHeight() / this.getWidth();
 			var cnv = document.createElement("canvas");
 			if (ar > 1) {
 				cnv.width = 150;
@@ -109,22 +119,38 @@ angular.module("scannerModel").factory("ScanImage", function(Status) {
 			}
 			var ctx = cnv.getContext("2d");
 			ctx.drawImage(this.imgElem, 0, 0, cnv.width, cnv.height);
-			this.thumbnailURI = cnv.toDataURL();
+			this.thumbnailURI = cnv.toDataURL(); //nice and small
 			return this.thumbnailURI;
 		}
 	};
 	
-	ScanImage.prototype.getWidth = function() {
-		return this.imgElem.width;
+	//image is downscaled to max res of A4 at 300ppi
+	ScanImage.prototype.getWidth = function() { 
+		if (this.imgElem.width > this.imgElem.height) {
+			return MAXW;
+		} else {
+			return (MAXH / this.imgElem.height) * this.imgElem.width;
+		}
 	}
 	
 	ScanImage.prototype.getHeight = function() {
-		return this.imgElem.height;
+		if (this.imgElem.height > this.imgElem.width) {
+			return MAXH;
+		} else {
+			return (MAXW / this.imgElem.width) * this.imgElem.height;
+		}
 	}
 	
 	ScanImage.prototype.updateProperty = function(prop, val) {
 		if (prop === "cornersStatus" || prop === "corners") {
 			if (this.cornersStatus === Status.INITIAL) {
+				return;
+			}
+		} else if (prop === "deskewImgURL") {
+			if (this.deskewStatus === Status.INITIAL) {
+				return;
+			} else {
+				this.setDeskewImg(val);
 				return;
 			}
 		}

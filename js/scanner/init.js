@@ -7,28 +7,27 @@ angular.module("scannerApp").run(function($rootScope, $location, $window, Scanne
 	
 	//Because these anonymous functions are invoked OUTSIDE of the angular JS world (callbacks), 
 	//	$apply needs to be called to update bindings and keep shit in sync
-	$rootScope.naclCont.addEventListener("error", $.proxy(function() {
+	$rootScope.naclCont.addEventListener("error", function() {
 		$rootScope.addLog("There was an error while loading the program.");
 		$rootScope.naclStatus = Status.FAILED;
 		$rootScope.$apply();
-	}, this), true);
-	$rootScope.naclCont.addEventListener("crash", $.proxy(function() {
+	}, true);
+	$rootScope.naclCont.addEventListener("crash", function() {
 		$rootScope.onCrash("Due to an error that occured while running, the program has crashed.");
 		$rootScope.$apply();
-	}, this), true);
-	$rootScope.naclCont.addEventListener("loadstart", $.proxy(function() {
+	}, true);
+	$rootScope.naclCont.addEventListener("loadstart", function() {
 		$rootScope.addLog("Loading");
 		$rootScope.naclStatus = Status.PROCESSING;
 		$rootScope.$apply();
-	}, this), true);
-	$rootScope.naclCont.addEventListener("load", $.proxy(function() {
+	}, true);
+	$rootScope.naclCont.addEventListener("load", function() {
 		$rootScope.addLog("Loaded.");
 		$rootScope.naclStatus = Status.SUCCESS;
 		$rootScope.$apply();
-	}, this), true);
-	$rootScope.naclCont.addEventListener("message", $.proxy(function(message) {
+	}, true);
+	$rootScope.naclCont.addEventListener("message", function(message) {
 		$rootScope.addLog("Message Received");
-		console.log(message);
 		
 		var obj = message.data;
 		if (typeof obj === "object") {
@@ -36,14 +35,13 @@ angular.module("scannerApp").run(function($rootScope, $location, $window, Scanne
 				$rootScope.onCrash(obj.type + ": " + obj.what);
 			else
 				Scanner.onMessage(obj);
-		}	
+		}
 		
 		$rootScope.$apply();
-	}, this), true);
+	}, true);
 	
 	$rootScope.addLog = function(str) { //can be anything, angular will handle conversion to string and shit lol
 		console.log(str);
-		//$rootScope.log.push(str);
 		$rootScope.log += "\n" + str;
 	};
 	

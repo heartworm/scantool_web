@@ -7,6 +7,11 @@ angular.module("scannerApp").controller("EditImgCtrl", function($scope, $locatio
 	var canvas = $("#cornerCanvas")[0];
 	var canvasInt = new CanvasInterface(canvas, $scope.images[0]);
 	$scope.editCorner = "";
+	$scope.editAll = false;
+	
+	$scope.onEdit = function() {
+		$scope.images[$scope.curIndex].deskewStatus = Status.INITIAL;
+	}
 	
 	$scope.$watch(function() {
 		return $scope.images[$scope.curIndex].corners;
@@ -52,7 +57,19 @@ angular.module("scannerApp").controller("EditImgCtrl", function($scope, $locatio
 
 			if (canvasInt.onClick($scope.editCorner, x, y)) { 
 				$scope.images[$scope.curIndex].cornersStatus = Status.INITIAL;
-				$scope.editCorner = ""; 
+				if ($scope.editAll) {
+					if ($scope.editCorner === "tl") $scope.editCorner = "tr";
+					else if ($scope.editCorner === "tl") $scope.editCorner = "tr";
+					else if ($scope.editCorner === "tr") $scope.editCorner = "br";
+					else if ($scope.editCorner === "br") $scope.editCorner = "bl";
+					else {
+						$scope.editCorner = "";
+						$scope.editAll = false;					
+					}
+				} else {
+					$scope.editCorner = "";
+				}
+				$scope.onEdit();
 			}
 		}
 	}
@@ -60,13 +77,13 @@ angular.module("scannerApp").controller("EditImgCtrl", function($scope, $locatio
 	$scope.toggleCorner = function(corner) {
 		if ($scope.editCorner === corner) {
 			$scope.editCorner = "";
+			$scope.editAll = false;
+		} else if (corner === "all") {
+			$scope.editAll = true;
+			$scope.editCorner = "tl";
 		} else {
 			$scope.editCorner = corner;
 		}
-	}
-	
-	$scope.deskew = function() {
-		Scanner.deskew(ScannerData.images[$scope.curIndex], $scope.curIndex);
 	}
 	
 	$scope.autoCorners = function() {
@@ -112,11 +129,13 @@ angular.module("scannerApp").controller("EditImgCtrl", function($scope, $locatio
 	}).add({
 		combo: 'd', callback: function() {$scope.toggleCorner("br");}
 	}).add({
+		combo: 'r', callback: function() {$scope.toggleCorner("all");}
+	}).add({
 		combo: 's', callback: $scope.prevImg
 	}).add({
 		combo: 'w', callback: $scope.nextImg
 	}).add({
 		combo: 'x', callback: $scope.deskew
-	}); //limits hotkey lifecycle to this page
+	}); //$scope limits hotkey lifecycle to this page
 
 });

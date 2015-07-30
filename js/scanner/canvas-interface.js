@@ -29,8 +29,6 @@ angular.module("scannerApp").factory("CanvasInterface", function() {
 	}
 
 	CanvasInterface.prototype.readCorners = function() {
-		console.log(this.dispScale);
-		console.log(this.scanImg.corners);
 		this.dispCorners[0] = [this.dispX + (this.dispScale * this.scanImg.corners.tlx),
 							   this.dispY + (this.dispScale * this.scanImg.corners.tly)];
 		this.dispCorners[1] = [this.dispX + (this.dispScale * this.scanImg.corners.trx),  this.dispY + (this.dispScale * this.scanImg.corners.try)];

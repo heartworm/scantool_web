@@ -1,13 +1,37 @@
-angular.module("scannerApp").controller("OutputCtrl", function($scope, $location, hotkeys, Status, ScannerData, Scanner) {
+angular.module("scannerApp").controller("OutputCtrl", function($scope, $location, $window, hotkeys, Status, ScannerData, Scanner) {
+	$scope.prev = function() {$location.path("/step2");}
+	
 	$scope.images = ScannerData.images;
 	$scope.outputType = "PDF";
 	$scope.jpegQuality = 85;
 	
+	$scope.deskewProgress = {
+		status: Status.INITIAL
+	};
+	
+	$scope.validateQuality = function(nig) {
+		if ($scope.jpegQuality === undefined)
+			$scope.jpegQuality = 85;
+	}
+	
+	$scope.defaults = function() {
+		
+		$scope.outputType = "PDF";
+		$scope.jpegQuality = 85;
+	}
+	
+	$scope.progressCb = function(data) {
+		$scope.deskewProgress = data;
+		console.log($scope.deskewProgress);
+		//$scope.$apply(); //function is called out of angular context
+	}
 	
 	$scope.deskew = function() {
-		for (var i = 0; i < $scope.images.length; i++) {
-			Scanner.deskew($scope.images[i], i);
-		}
+		Scanner.finalDeskew($scope.outputType, $scope.jpegQuality / 100, $scope.progressCb);
+	}
+	
+	$scope.download = function() {
+		$window.open($scope.deskewProgress.blobURL);
 	}
 	
 });
