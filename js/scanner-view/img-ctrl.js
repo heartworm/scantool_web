@@ -79,8 +79,14 @@ angular.module("scannerApp").controller("EditImgCtrl", function($scope, $locatio
 			$scope.editCorner = "";
 			$scope.editAll = false;
 		} else if (corner === "all") {
-			$scope.editAll = true;
-			$scope.editCorner = "tl";
+			if ($scope.editAll) {
+				$scope.editAll = false;
+				$scope.editCorner = "";				
+			} else {
+				$scope.editAll = true;
+				$scope.editCorner = "tl";
+			}
+
 		} else {
 			$scope.editCorner = corner;
 		}
@@ -135,7 +141,7 @@ angular.module("scannerApp").controller("EditImgCtrl", function($scope, $locatio
 	}).add({
 		combo: 'w', callback: $scope.nextImg
 	}).add({
-		combo: 'x', callback: $scope.deskew
+		combo: 'f', callback: $scope.autoCorners
 	}); //$scope limits hotkey lifecycle to this page
 
 });

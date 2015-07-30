@@ -1,0 +1,7 @@
+Bootstrap - http://getbootstrap.com/
+AngularJS - https://angularjs.org/
+Angular-Hotkeys - https://chieffancypants.github.io/angular-hotkeys/
+jsPDF - https://github.com/MrRio/jsPDF
+jsZip - https://github.com/Stuk/jszip
+Google Chrome Dev Tools - https://developer.chrome.com/devtools
+App Icon made by Freepik from www.flaticon.com (Creative Commons BY 3.0) - http://www.flaticon.com/authors/freepik

@@ -6,55 +6,61 @@
 	</div>
 </div>
 
-<div class="row" id="mainRow">
-	<div class="col-md-4">
-		<div class="panel panel-default">
-			<div class="panel-heading"><h3 class="panel-title">Export Settings</h3></div>
-			<div class="panel-body">
-				<h4>Output Type</h4>
-				<div class="btn-group btn-group-justified">
-					<div class="btn-group">
-						<button type="button" class="btn btn-default" ng-click="outputType = 'JPEG'"
-								ng-class="outputType == 'JPEG' ? 'active' : ''">JPEG</button>
+<div class="row col-md-12" id="mainRow">
+	<div ng-switch="deskewProgress.status">
+		<div ng-switch-when="0">
+			<div class="col-md-4">
+				<div class="panel panel-default">
+					<div class="panel-heading"><h3 class="panel-title">Export Settings</h3></div>
+					<div class="panel-body">
+						<h4>Output Type</h4>
+						<div class="btn-group btn-group-justified">
+							<div class="btn-group">
+								<button type="button" class="btn btn-default" ng-click="outputType = 'JPEG'"
+										ng-class="outputType == 'JPEG' ? 'active' : ''">JPEG</button>
+							</div>
+							<div class="btn-group">
+								<button type="button" class="btn btn-default" ng-click="outputType = 'PNG'"
+										ng-class="outputType == 'PNG' ? 'active' : ''">PNG</button>
+							</div>
+							<div class="btn-group">
+								<button type="button" class="btn btn-default" ng-click="outputType = 'PDF'"
+										ng-class="outputType == 'PDF' ? 'active' : ''">PDF</button>
+							</div>
+						</div> 
+						<div ng-hide="outputType == 'PNG'" class="input-group padding-top">
+							<span class="input-group-addon">JPEG Quality</span>
+							<input type="number" min="0" max="100" ng-blur="validateQuality()"
+								   ng-model="jpegQuality" class="form-control" id="jpegQuality">
+						</div>
+						<button type="button" class="btn btn-primary margin-top" ng-click="defaults()">
+							Reset to Defaults
+						</button>
 					</div>
-					<div class="btn-group">
-						<button type="button" class="btn btn-default" ng-click="outputType = 'PNG'"
-								ng-class="outputType == 'PNG' ? 'active' : ''">PNG</button>
-					</div>
-					<div class="btn-group">
-						<button type="button" class="btn btn-default" ng-click="outputType = 'PDF'"
-								ng-class="outputType == 'PDF' ? 'active' : ''">PDF</button>
-					</div>
-				</div> 
-				<div ng-hide="outputType == 'PNG'" class="input-group padding-top">
-					<span class="input-group-addon">JPEG Quality</span>
-					<input type="number" min="0" max="100" ng-blur="validateQuality()"
-						   ng-model="jpegQuality" class="form-control" id="jpegQuality">
 				</div>
-				<button type="button" class="btn btn-primary margin-top" ng-click="defaults()">
-					Reset to Defaults
+			</div>
+			<div class="col-md-8">
+				<button type="button" class="btn btn-primary btn-block" ng-click="deskew()">
+					<span class="glyphicon glyphicon-play"></span> Begin processing all images.
 				</button>
 			</div>
 		</div>
-	</div>
-	<div class="col-md-8" ng-switch="deskewProgress.status">
-		<div ng-switch-when="0"><!-- Status.INITIAL -->
-			<button type="button" class="btn btn-primary btn-block" ng-click="deskew()">
-				<span class="glyphicon glyphicon-play"></span> Begin processing all images.
-			</button>
-		</div>		
 		<div ng-switch-when="1"><!-- Status.PROCESSING -->
-			<div class="progress">
-				<div class="progress-bar progress-bar-striped active" id="progressBar"
-					 ng-style="{width: deskewProgress.percent + '%'}">
-					{{deskewProgress.text}}
+			<div class="margin-top">
+				<div class="progress">
+					<div class="progress-bar progress-bar-striped active" id="progressBar"
+						 ng-style="{width: deskewProgress.percent + '%'}">
+						{{deskewProgress.text}}
+					</div>
 				</div>
 			</div>
-		</div>		
+		</div>
 		<div ng-switch-when="2"><!-- Status.SUCCESS -->
-			<button type="button" class="btn btn-success btn-block" ng-click="download()">
-				Download File. (will open in new window)
-			</button>
+			<div class="margin-top">
+				<button type="button" class="btn btn-success btn-block" ng-click="download()">
+					Download File. (will open in new window)
+				</button>
+			</div>
 		</div>
 	</div>
 </div>

@@ -21,7 +21,7 @@
 
 		<h4>Corner Adjustment</h4>
 		<button class="btn btn-default col-md-12" id="autoCornerBtn" ng-click="autoCorners()">
-			AutoCorners
+			AutoCorners - <kbd>F</kbd>
 		</button>
 		<span class="label col-md-12" id="autoCornerStatus" ng-class="statusClassLabel()">
 			{{statusString()}}
@@ -32,15 +32,25 @@
 			Press <kbd>?</kbd> for keyboard shortcuts.
 		</span>
 		<button class="btn btn-default btn-primary col-md-6" id="cornerBtnTl" ng-click="toggleCorner('tl')"
-				ng-class="editCorner === 'tl' ? 'active' : ''">Top Left - <kbd>Q</kbd></button>
+				ng-class="editCorner === 'tl' ? 'active' : ''">
+			Top Left - <kbd>Q</kbd>
+		</button>
 		<button class="btn btn-default btn-success col-md-6" id="cornerBtnTr" ng-click="toggleCorner('tr')"
-				ng-class="editCorner === 'tr' ? 'active' : ''">Top Right - <kbd>E</kbd></button> 
+				ng-class="editCorner === 'tr' ? 'active' : ''">
+			Top Right - <kbd>E</kbd>
+		</button> 
 		<button class="btn btn-default col-md-6" id="cornerBtnBl" ng-click="toggleCorner('bl')"
-				ng-class="editCorner === 'bl' ? 'active' : ''">Bottom Left - <kbd>A</kbd></button>
+				ng-class="editCorner === 'bl' ? 'active' : ''">
+			Bottom Left - <kbd>A</kbd>
+		</button>
 		<button class="btn btn-default btn-info col-md-6" id="cornerBtnBr" ng-click="toggleCorner('br')"
-				ng-class="editCorner === 'br' ? 'active' : ''">Bottom Right - <kbd>D</kbd></button>
+				ng-class="editCorner === 'br' ? 'active' : ''">
+			Bottom Right - <kbd>D</kbd>
+		</button>
 		<button class="btn btn-default btn-warning col-md-12" id="cornerBtnAll" ng-click="toggleCorner('all')"
-				ng-class="editAll ? 'active' : ''">Edit All Corners - <kbd>R</kbd></button>
+				ng-class="editAll ? 'active' : ''">
+			Edit All Corners - <kbd>R</kbd>
+		</button>
 	</div>
 	<div class="col-md-9">
 		<canvas width="1600" height="1200" id="cornerCanvas" ng-mousedown="cornerClick($event)"></canvas>

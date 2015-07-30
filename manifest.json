@@ -1,0 +1,12 @@
+{
+  "name": "Scan Tool",
+  "description": "Scan and process images on a computer.",
+  "version": "1.0",
+  "manifest_version": 2,
+  "app": {
+    "background": {
+      "scripts": ["background.js"]
+    }
+  },
+  "icons": { "16": "favicon.png", "128": "scantool-128.png" }
+}
