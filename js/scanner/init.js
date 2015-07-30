@@ -49,7 +49,7 @@ angular.module("scannerApp").run(function($rootScope, $location, $window, Scanne
 		$rootScope.naclStatus = Status.FAILED;
 		$rootScope.addLog(str);
 		$location.path("/log");
-		$window.alert("An error has occured. Please inspect log");
+		bootbox.alert("An error has occured. Please inspect log");
 	}
 	
 	$rootScope.naclCont.innerHTML = '<embed name="naclMod" id="naclMod" width="0" height="0" src="app.nmf" type="application/x-pnacl">';

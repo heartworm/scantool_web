@@ -22,7 +22,7 @@ angular.module("scannerApp").controller("AddImgCtrl", function($rootScope, $scop
 		var fileIn = $("#fileIn")[0];
 		var files = fileIn.files;
 		if (files.length === 0) {
-			$window.alert("No Files Selected!");
+			bootbox.alert("No Files Selected!");
 		} else {
 			ScannerData.addImages(files);
 			fileIn.value = null;

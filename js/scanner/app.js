@@ -12,11 +12,11 @@ angular.module("scannerApp").config(["$routeProvider", function($routeProvider) 
 		if (step >= 2) { //if there are no images in list, or some images were loading/corrupted, send user back to file selection page 
 			if (ScannerData.images.length == 0) {
 				$location.path("/step1");
-				$window.alert("No images in list. Add images to continue.");
+				bootbox.alert("No images in list. Add images to continue.");
 				return def.reject();
 			} else if (!ScannerData.imagesReady()) {
 				$location.path("/step1");
-				$window.alert("One or more images in the list haven't loaded. Remove them before continuing.");
+				bootbox.alert("One or more images in the list haven't loaded. Remove them before continuing.");
 				return def.reject();
 			}
 		}
